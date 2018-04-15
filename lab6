@@ -1,0 +1,29 @@
+%% Ideal Filters
+
+% lowpass
+N = 20;
+n = linspace(-N,0,N);
+wc = 20;
+h1 = wc / pi * sinc(wc / pi * n);
+H1 = fft(h1);
+H1 = fftshift(H1);
+w = fftshift((0:N-1)/N * 2 * pi);
+w(1:N/2) = w(1:N/2) - 2*pi;
+figure;
+subplot(2,1,1);
+plot(n, h1);
+subplot(2,1,2);
+stem(w,abs(H1));
+
+% highpass
+y = dirac(n);
+idx = y == Inf;
+y(idx) = 1;
+h2 = y - h1;
+H2 = fft(h2);
+H2 = fftshift(H2);
+figure;
+subplot(2,1,1);
+plot(n, h2);
+subplot(2,1,2);
+stem(w,abs(H2));
