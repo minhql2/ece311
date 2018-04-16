@@ -126,3 +126,63 @@ subplot(2,1,1);
 plot(n,h);
 subplot(2,1,2);
 plot(w, mag2db(abs(H)));
+
+%% Report Item 4
+f = [.3, .36];
+a = [1,0];
+rp = 2;
+rs = 50;
+fs = 2;
+dev = [(10^(rp/20)-1)/(10^(rp/20)+1)  10^(-rs/20)]; 
+[n, fo, mo, w] = firpmord(f, a, dev, fs);
+b = firpm(n, fo, mo, w);
+freqz(b,1);
+title('Low Pass filter with freqz');
+figure;
+impz(b);
+
+%% Report Item 5
+[y, Fs] = audioread('sound1.wav');
+%sound(y, Fs);
+% y has 650000 samples and 44100 HZ sampling frequency so divide to get
+% 14.639 seconds
+s = spectrogram(y);
+spectrogram(y, 'yaxis');
+f = [.45, .55];
+a = [1,0];
+rp = 2;
+rs = 50;
+fs = 2;
+dev = [(10^(rp/20)-1)/(10^(rp/20)+1)  10^(-rs/20)]; 
+[n, fo, mo, w] = firpmord(f, a, dev, Fs);
+b = firpm(n, fo, mo, w);
+ynew = filter(b,1,y);
+sound(ynew, Fs);
+s2 = spectrogram(ynew);
+figure;
+spectrogram(ynew, 'yaxis');
+
+%% Report Item 6
+[y, Fs] = audioread('sound2.wav');
+%sound(y,Fs);
+Y2 = fft(y);
+x = linspace(0,length(y), length(y));
+figure;
+plot(x, abs(Y2));
+%[s,w,t] = spectrogram(y,hamming(4096),2048,4096);
+s = spectrogram(y);
+figure;
+%imagesc(t,w,log(abs(s)));
+spectrogram(y, 'yaxis');
+f = [.25, .3];
+a = [1,0];
+rp = 2;
+rs = 50;
+fs = 2;
+dev = [(10^(rp/20)-1)/(10^(rp/20)+1)  10^(-rs/20)]; 
+[n, fo, mo, w] = firpmord(f, a, dev, fs);
+b = firpm(n, fo, mo, w)
+ynew = filter(b,1,y);
+sound(ynew, Fs);
+figure;
+spectrogram(ynew, 'yaxis');
